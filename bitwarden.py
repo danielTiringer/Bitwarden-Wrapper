@@ -1,34 +1,8 @@
-#!/usr/bin/env python3
-
 from getpass import getpass
 import json
 import re
 import subprocess
-
-class Dialogue:
-    def prompt_option_selection(self, options):
-        print('Please select what you want to do:')
-        self.print_menu(options)
-        option = ''
-        try:
-            option = int(input('Enter your choice: '))
-        except:
-            print('Wrong input. Please enter a number...')
-
-        return option
-
-    def confirm_choice(self, choice_string):
-        print(choice_string)
-        while True:
-            confirm = input('[y]Yes or [n]No: ')
-            if confirm in ('y', 'n'):
-                return confirm
-            else:
-                print('Invalid Option. Please Enter a Valid Option.')
-
-    def print_menu(self, list):
-        for key in list.keys():
-            print(key, '--', list[key])
+from dialogue import Dialogue
 
 class Bitwarden:
     main_menu_options = {
@@ -155,15 +129,5 @@ class Bitwarden:
         folders_json = json.loads(folders_string)
         folders = [a_dict['name'] for a_dict in folders_json]
         self.folders = folders
-
-
-def main():
-    dialogue = Dialogue()
-    bitwarden = Bitwarden(dialogue)
-    bitwarden.process_request()
-
-
-if __name__ == '__main__':
-    main()
 
 
