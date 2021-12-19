@@ -22,6 +22,7 @@ class Bitwarden:
 
     def __init__(self, dialogue: Dialogue):
         self.dialogue = dialogue
+        self.check_bitwarden_install()
         self.check_bitwarden_login()
         self.unlock_vault()
         self.sync_vault()
@@ -39,6 +40,13 @@ class Bitwarden:
             if option == 3:
                 print('User aborted.')
                 exit(0)
+
+    def check_bitwarden_install(self):
+        status = subprocess.getstatusoutput('command -v bw')
+        if status[0] != 0:
+            print('Bitwarden CLI is not installed. Please install it first and try again.')
+            exit(1)
+
 
     def check_bitwarden_login(self):
         status_string = subprocess.getoutput('bw status')
