@@ -5,18 +5,6 @@ import subprocess
 from dialogue import Dialogue
 
 class Bitwarden:
-    main_menu_options = {
-        1: 'Create new item',
-        2: 'Create new folder',
-        3: 'Cancel',
-    }
-    item_types = {
-        1: 'Login',
-        2: 'Secure Note',
-        3: 'Card',
-        4: 'Identity',
-        5: 'Cancel',
-    }
     session_key = ''
     folders = []
 
@@ -29,7 +17,7 @@ class Bitwarden:
 
     def process_request(self):
         while(True):
-            option = self.dialogue.prompt_option_selection(self.main_menu_options)
+            option = self.dialogue.prompt_main_menu()
 
             if option == 1:
                 self.process_new_item_request()
@@ -72,7 +60,7 @@ class Bitwarden:
 
     def process_new_item_request(self):
         while(True):
-            option = self.dialogue.prompt_option_selection(self.item_types)
+            option = self.dialogue.prompt_item_type_selection()
             if option == 1:
                 self.create_new_login()
             if option == 5:
