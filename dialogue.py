@@ -17,19 +17,24 @@ class Dialogue:
 
 
     def prompt_main_menu(self):
+        print('Please select what you want to do:')
         return self.prompt_option_selection(self.main_menu_options)
 
 
     def prompt_item_type_selection(self):
+        print('Please select which type you want to create:')
         return self.prompt_option_selection(self.item_types)
 
 
-    def prompt_folder_selection(self, folders):
-        print(folders)
+    def select_folder(self, folders):
+        folder_list = [a_dict['name'] for a_dict in folders]
+        folder_options = self.enumerate_list_options(folder_list)
+
+        print('Please select which folder you want to place the new item:')
+        return self.prompt_option_selection(folder_options)
 
 
     def prompt_option_selection(self, options):
-        print('Please select what you want to do:')
         self.print_menu(options)
         option = ''
         try:
@@ -57,3 +62,7 @@ class Dialogue:
 
     def get_users_password(self):
         return getpass('Please enter your Bitwarden password: ')
+
+
+    def enumerate_list_options(self, list):
+        return dict(enumerate(list, start = 1))

@@ -47,6 +47,7 @@ class Bitwarden:
     def create_new_secure_note(self):
         name = input('Enter a name for the new secure note: ')
         note = input('Enter the note you wish to save: ')
+        selected_folder_index = self.dialogue.select_folder(self.folders)
         if self.dialogue.confirm_choice(f"Are you sure you want to create a secure note named {name} containing {note}?") != 'y':
             print('User aborted.')
             exit(1)
@@ -55,6 +56,7 @@ class Bitwarden:
         template['type'] = 2
         template['name'] = name
         template['notes'] = note
+        template['folderId'] = self.folders[selected_folder_index - 1]['id']
 
         secure_note_template = json.loads(subprocess.getoutput(f"bw get template item.secureNote --session {self.session_key}"))
         secure_note_template['type'] = 0
@@ -76,13 +78,16 @@ class Bitwarden:
         username = input('Enter a username for the new login: ')
         password = input('Enter a password for the new login: ')
         uri = input('Enter a url for the new login if it applies: ')
+        selected_folder_index = self.dialogue.select_folder(self.folders)
         if self.dialogue.confirm_choice(f"Are you sure you want to create a login named {name}, username {username}, password {password}?") != 'y':
             print('User aborted.')
             exit(1)
 
         template = json.loads(subprocess.getoutput(f"bw get template item --session {self.session_key}"))
+        print(json.dumps(template, indent = 4))
         login_template = json.loads(subprocess.getoutput(f"bw get template item.login --session {self.session_key}"))
         template['name'] = name
+        template['folderId'] = self.folders[selected_folder_index - 1]['id']
         login_template['username'] = username
         login_template['password'] = password
         login_template['totp'] = ''
@@ -126,9 +131,7 @@ class Bitwarden:
 
     def get_folders(self):
         folders_string = subprocess.getoutput(f"bw list folders --session {self.session_key}")
-        folders_json = json.loads(folders_string)
-        folders = [a_dict['name'] for a_dict in folders_json]
-        self.folders = folders
+        self.folders = json.loads(folders_string)
 
 
     def check_bitwarden_install(self):
