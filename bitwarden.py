@@ -63,9 +63,37 @@ class Bitwarden:
             option = self.dialogue.prompt_item_type_selection()
             if option == 1:
                 self.create_new_login()
+            if option == 2:
+                self.create_new_secure_note()
             if option == 5:
                 print('User aborted.')
                 exit(0)
+
+    def create_new_secure_note(self):
+        name = input('Enter a name for the new secure note: ')
+        note = input('Enter the note you wish to save: ')
+        if self.dialogue.confirm_choice(f"Are you sure you want to create a secure note named {name} containing {note}?") != 'y':
+            print('User aborted.')
+            exit(1)
+
+        template = json.loads(subprocess.getoutput(f"bw get template item --session {self.session_key}"))
+        template['type'] = 2
+        template['name'] = name
+        template['notes'] = note
+
+        secure_note_template = json.loads(subprocess.getoutput(f"bw get template item.secureNote --session {self.session_key}"))
+        secure_note_template['type'] = 0
+        template['secureNote'] = secure_note_template
+
+        updated_template_json = json.dumps(template, separators = (',', ':'))
+        output = subprocess.getstatusoutput(f"echo '{updated_template_json}' | bw encode | bw create item --session {self.session_key}")
+        
+        if output[0] == 0:
+            print("The note was created.")
+        else:
+            print("There was a problem creating the note.")
+
+        exit(output[0])
 
     def create_new_login(self):
         name = input('Enter a name for the new login: ')
@@ -78,20 +106,18 @@ class Bitwarden:
 
         template = json.loads(subprocess.getoutput(f"bw get template item --session {self.session_key}"))
         login_template = json.loads(subprocess.getoutput(f"bw get template item.login --session {self.session_key}"))
-        print(json.dumps(template, indent = 4))
-        print(json.dumps(login_template, indent = 4))
         template['name'] = name
         login_template['username'] = username
         login_template['password'] = password
         login_template['totp'] = ''
+
         if uri != '':
             uri_template = json.loads(subprocess.getoutput(f"bw get template item.login.uri --session {self.session_key}"))
             uri_template['uri'] = uri
-            print(json.dumps(uri_template, indent = 4))
             login_template['uris'].append(uri_template)
 
         template['login'] = login_template
-        updated_template_json = json.dumps(template, separators=(',', ':'))
+        updated_template_json = json.dumps(template, separators = (',', ':'))
         output = subprocess.getstatusoutput(f"echo '{updated_template_json}' | bw encode | bw create item --session {self.session_key}")
         
         if output[0] == 0:
