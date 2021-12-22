@@ -1,3 +1,6 @@
+from getpass import getpass
+
+
 class Dialogue:
     main_menu_options = {
         1: 'Create new item',
@@ -12,11 +15,18 @@ class Dialogue:
         5: 'Cancel',
     }
 
+
     def prompt_main_menu(self):
         return self.prompt_option_selection(self.main_menu_options)
 
+
     def prompt_item_type_selection(self):
         return self.prompt_option_selection(self.item_types)
+
+
+    def prompt_folder_selection(self, folders):
+        print(folders)
+
 
     def prompt_option_selection(self, options):
         print('Please select what you want to do:')
@@ -29,6 +39,7 @@ class Dialogue:
 
         return option
 
+
     def confirm_choice(self, choice_string):
         print(choice_string)
         while True:
@@ -38,6 +49,11 @@ class Dialogue:
             else:
                 print('Invalid Option. Please Enter a Valid Option.')
 
+
     def print_menu(self, list):
         for key in list.keys():
             print(key, '--', list[key])
+
+
+    def get_users_password(self):
+        return getpass('Please enter your Bitwarden password: ')
