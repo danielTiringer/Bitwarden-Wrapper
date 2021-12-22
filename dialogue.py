@@ -61,7 +61,22 @@ class Dialogue:
 
 
     def get_users_password(self):
-        return getpass('Please enter your Bitwarden password: ')
+        return self.get_password('Please enter your Bitwarden password: ')
+
+
+    def get_new_password(self):
+        while True:
+            password = self.get_password('Please enter the password: ')
+            password_confirm = self.get_password('Please enter the password again: ')
+
+            if (password != password_confirm):
+                print('The entered passwords did not match.')
+            else:
+                return password
+
+
+    def get_password(self, message):
+        return getpass(message)
 
 
     def enumerate_list_options(self, list):

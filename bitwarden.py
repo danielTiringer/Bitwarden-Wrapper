@@ -76,7 +76,7 @@ class Bitwarden:
     def create_new_login(self):
         name = input('Enter a name for the new login: ')
         username = input('Enter a username for the new login: ')
-        password = input('Enter a password for the new login: ')
+        password = self.dialogue.get_new_password()
         uri = input('Enter a url for the new login if it applies: ')
         selected_folder_index = self.dialogue.select_folder(self.folders)
         if self.dialogue.confirm_choice(f"Are you sure you want to create a login named {name}, username {username}, password {password}?") != 'y':
