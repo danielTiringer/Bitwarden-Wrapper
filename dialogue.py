@@ -2,6 +2,7 @@ from getpass import getpass
 
 
 class Dialogue:
+
     main_menu_options = {
         1: 'Create new item',
         2: 'Create new folder',
@@ -81,3 +82,10 @@ class Dialogue:
 
     def enumerate_list_options(self, list):
         return dict(enumerate(list, start = 1))
+
+
+    def print_status(self, status):
+        if status == 0:
+            print('The requested was completed.')
+        else:
+            print('A problem was encountered while processing the request.')
